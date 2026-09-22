@@ -3,6 +3,8 @@ const isRestrictedMode = process.env.NEXT_PUBLIC_RESTRICTED_MODE === 'true'
 
 const nextConfig = {
   reactStrictMode: true,
+  // Electron 同梱用（desktop/）: NEXT_OUTPUT_STANDALONE=true で standalone サーバを出力
+  ...(process.env.NEXT_OUTPUT_STANDALONE === 'true' && { output: 'standalone' }),
   assetPrefix: process.env.BASE_PATH || '',
   basePath: process.env.BASE_PATH || '',
   trailingSlash: true,

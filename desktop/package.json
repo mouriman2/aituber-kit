@@ -1,0 +1,50 @@
+{
+  "name": "ai3dc-chat",
+  "productName": "ai3dc-chat",
+  "version": "0.1.0",
+  "description": "自作 VRM と会話するデスクトップアプリ（AITuberKit + ai3dc bridge）",
+  "private": true,
+  "main": "main.cjs",
+  "author": "mouriman",
+  "scripts": {
+    "prepare-resources": "node prepare.cjs",
+    "start": "electron .",
+    "dist": "node prepare.cjs && electron-builder --win dir"
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "jp.mouriman.ai3dc-chat",
+    "productName": "ai3dc-chat",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build-resources"
+    },
+    "files": [
+      "main.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/app-server",
+        "to": "app-server"
+      },
+      {
+        "from": "resources/node",
+        "to": "node"
+      },
+      {
+        "from": "resources/bridge",
+        "to": "bridge"
+      }
+    ],
+    "asar": false,
+    "win": {
+      "target": [
+        "dir"
+      ]
+    }
+  }
+}
