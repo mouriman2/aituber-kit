@@ -6,6 +6,7 @@ import settingsStore from '@/features/stores/settings'
 import externalLinkageWebSocketStore from '@/features/stores/externalLinkageWebSocketStore'
 import { generateMessageId } from '@/utils/messageUtils'
 import { createExternalLinkageLifecycleEvent } from '@/features/externalLinkage/externalLinkageProtocol'
+import { extractMotionTag } from '@/features/chat/speechPipeline/tagExtractors'
 
 type ExternalSpeechLifecycleState = {
   pendingSpeechCount: number
@@ -97,6 +98,11 @@ export const handleReceiveTextFromWsFn =
   ) => {
     const sessionId = generateMessageId()
     if (text === null || role === undefined) return
+
+    // 外部サーバからのテキスト先頭の [motion:xxx] をポーズ指定として取り出す（内蔵AI経路と同じ書式）
+    const { motionTag, remainingText } = extractMotionTag(text)
+    const motion = motionTag || undefined
+    text = remainingText
 
     const ss = settingsStore.getState()
     const hs = homeStore.getState()
@@ -207,6 +213,7 @@ export const handleReceiveTextFromWsFn =
             {
               message: text,
               emotion: emotion,
+              motion,
             },
             () => {
               // assistantMessage is now derived from chatLog, no need to set it separately
